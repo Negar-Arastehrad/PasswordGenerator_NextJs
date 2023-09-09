@@ -1,0 +1,29 @@
+.generateBtn{
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    background-color: #F9957F;
+    color: white;
+    height: 3.5rem;
+    font-size: 1.5rem;
+    font-family: 'Alegreya';
+    cursor: pointer;
+}
+
+.generateBtn:hover{
+    color: #F9957F;
+    background-color: white;
+    border: 3px solid #F9957F;
+    transition: .3s ease;
+}
+
+.copyBtn{
+    border: none;
+    background-color: transparent;
+    color: #F9957F;
+    font-size: 1.7rem;
+    cursor: pointer;
+}
+
+
+

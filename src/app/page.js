@@ -1,95 +1,99 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import { useState } from "react";
+import Button from "./Components/Button/Button";
+import Checkbox from "./Components/Checkbox/Checkbox";
+import UsePassGenerator from "./Hooks/Use-pass-generator";
+import Strength from "./Components/Strength/Strength";
+
+import BtnStyle from './Components/Button/Button.module.css'
+
 
 export default function Home() {
+  const [copied, setcopied] = useState(false);
+  const [length, setLength] = useState(4);
+  const [CheckboxData, setCheckboxData] = useState([
+    { title: "UpperCase Letters", state: false },
+    { title: "LowerCase Letters", state: false },
+    { title: "Numbers", state: false },
+    { title: "Symbols", state: false },
+  ]);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(password);
+    setcopied(true);
+    setTimeout(() => {
+      setcopied(false);
+    }, 2000);
+  };
+
+  const handleCheckboxChange = (i) => {
+    const updateCheckboxData = [...CheckboxData];
+    updateCheckboxData[i].state = !updateCheckboxData[i].state;
+    setCheckboxData(updateCheckboxData);
+  };
+
+  const { password, errorMessage, generatePassword } = UsePassGenerator();
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <main>
+      <div className="container">
+        <h1>Pass Generator</h1>
+
+        <div className="generate-box">
+          {password && (
+            <div className="pass-container">
+              <div className="pass">
+                <p>{password}</p>
+                <Button
+                  customClass={BtnStyle.copyBtn}
+                  onClick={handleCopy}
+                  text={copied ? "Copied" : "Copy"}
+                />
+              </div>
+              <Strength password={password} />
+            </div>
+          )}
+
+
+          <p className="customize-text">Customize Your Password</p>
+
+          <div className="length">
+            <div className="labels">
+              <label htmlFor="Range">Character Length</label>
+              <label htmlFor="Range">{length}</label>
+            </div>
+            <input
+              type="range"
+              min="4"
+              max="20"
+              value={length}
+              onChange={(e) => setLength(e.target.value)}
+              id="Range"
             />
-          </a>
+          </div>
+
+          <div className="checkboxes">
+            {CheckboxData.map((checkbox, index) => {
+              return (
+                <Checkbox
+                  title={checkbox.title}
+                  onChange={() => handleCheckboxChange(index)}
+                  state={checkbox.state}
+                  key={index}
+                />
+              );
+            })}
+          </div>
+
+          {errorMessage && <p className="errorMessage"> {errorMessage} </p>}
+
+          <Button
+            customClass={BtnStyle.generateBtn}
+            onClick={() => generatePassword(CheckboxData, length)}
+            text="Generate Password"
+          />
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+        </div>
     </main>
-  )
+  );
 }

@@ -121,6 +121,9 @@ input[type=range]::-webkit-slider-thumb {
 .pass p{
     font-size: 2.3rem;
     font-weight: 500;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;     
+    width: 60%;
 }
 
 
